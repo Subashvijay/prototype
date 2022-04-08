@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Cell } from './models/Cell.model';
 
 @Component({
@@ -13,12 +13,41 @@ export class AppComponent implements OnInit {
   columns: Cell[][] = [];
   agv_X_pos = 25;
   agv_Y_pos = 25;
+
+@HostListener('window:keydown.ArrowLeft')
+handleArrowLeft(){
+  this.btnClick('left')
+}
+
+@HostListener('window:keydown.ArrowRight')
+handleArrowRight(){
+  this.btnClick('right')
+}
+
+@HostListener('window:keydown.ArrowUp')
+handleArrowUp(){
+  this.btnClick('up')
+}
+
+@HostListener('window:keydown.ArrowDown')
+handleArrowDown(){
+  this.btnClick('down')
+}
+
   ngOnInit(): void {
 
-    for (let index = 0; index < 30; index++) {
+    for (let index = 0; index <= 30; index++) {
       let row = [];
-      for (let j = 0; j < 100; j++) {
-        row.push({ isWall: false, isAgv: false } as Cell);
+      for (let j = 0; j <= 100; j++) {
+        
+        if(index == 0 || index == 30 || j == 0 || j == 100)
+        {
+          row.push({ isWall: true, isAgv: false } as Cell);
+        }
+        else
+        {
+          row.push({ isWall: false, isAgv: false } as Cell);
+        }
       }
       this.columns.push(row)
     }
@@ -30,16 +59,24 @@ export class AppComponent implements OnInit {
     this.resetAGV();
     switch (dir) {
       case 'right':
-        this.agv_X_pos++;
+        if(!this.isWall(this.agv_X_pos,this.agv_Y_pos+1)){
+        this.agv_Y_pos++;
+        }
         break;
       case 'left':
-        this.agv_X_pos--;
+        if(!this.isWall(this.agv_X_pos,this.agv_Y_pos-1)){
+        this.agv_Y_pos--;
+        }
         break;
       case 'up':
-        this.agv_Y_pos--;
+        if(!this.isWall(this.agv_X_pos-1,this.agv_Y_pos)){
+        this.agv_X_pos--;
+        }
         break;
       case 'down':
-        this.agv_Y_pos++;
+        if(!this.isWall(this.agv_X_pos+1,this.agv_Y_pos)){
+        this.agv_X_pos++;
+        }
         break;
 
       default:
@@ -49,11 +86,15 @@ export class AppComponent implements OnInit {
   }
 
   updateAGV() {
-    this.columns[this.agv_Y_pos][this.agv_X_pos].isAgv = true;
+    this.columns[this.agv_X_pos][this.agv_Y_pos].isAgv = true;
   }
 
   resetAGV() {
-    this.columns[this.agv_Y_pos][this.agv_X_pos].isAgv = false;
+    this.columns[this.agv_X_pos][this.agv_Y_pos].isAgv = false;
+  }
+
+  isWall(x:number,y:number){
+return this.columns[x][y].isWall;
   }
 
 }

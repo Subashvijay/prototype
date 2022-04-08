@@ -1,5 +1,5 @@
 <h2>Press Ctrl + mouse hover to create walls/ also use arrow key for movement</h2>
-<div class="container">
+<div class="container ms-0">
   <div *ngFor="let col of columns" class="d-flex">
     <div *ngFor="let cell of col">
       <!-- <app-cell [isAgv]="cell.isAgv" [isWall]="cell.isWall"></app-cell> -->
@@ -7,7 +7,7 @@
     </div>
   </div>
 
-  <div style="width: 200px; height: 200px;" class="container">
+  <div style="width: 200px; height: 200px;" class="container ">
     <div class="row  justify-content-around">
       <button (click)="btnClick('up')"  class="btn btn-primary col-5">up</button>
       
